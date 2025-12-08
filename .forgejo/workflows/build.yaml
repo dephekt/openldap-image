@@ -1,0 +1,31 @@
+name: Build and Publish OpenLDAP Image
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+    paths:
+      - 'Dockerfile'
+      - 'ldap-bootstrap/**'
+      - '.forgejo/workflows/build.yaml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Dockerfile'
+      - 'ldap-bootstrap/**'
+      - '.forgejo/workflows/build.yaml'
+
+jobs:
+  build:
+    runs-on: stackdrift
+    uses: stackdrift-images/ci-templates/.forgejo/workflows/docker-build.yml@main
+    with:
+      image_name: codeberg.org/stackdrift-images/openldap
+      upstream_image_search: osixia/openldap
+      upstream_name_short: openldap
+    secrets:
+      registry_password: ${{ secrets.REGISTRY_DEPLOY_KEY }}
+
