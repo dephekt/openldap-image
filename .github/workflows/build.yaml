@@ -1,0 +1,31 @@
+name: Build and Publish OpenLDAP Image
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+    paths:
+      - "Dockerfile"
+      - "ldap-bootstrap/**"
+      - ".github/workflows/build.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "Dockerfile"
+      - "ldap-bootstrap/**"
+      - ".github/workflows/build.yaml"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    uses: dephekt/ci-templates/.github/workflows/docker-build.yml@main
+    with:
+      image_name: ghcr.io/dephekt/openldap-image
+      upstream_image_search: osixia/openldap
+      upstream_name_short: openldap
